@@ -10,7 +10,7 @@ import streamlit as st
 
 from learning_app.content import Lesson, lessons_by_chapter, load_lessons
 from learning_app.runner import check_code, run_code
-from learning_app.storage import ProgressStore
+from learning_app.storage import ProgressStore as _SQLiteStore
 
 
 DEFAULT_CONTENT_DIR = Path(os.environ.get("LEARNING_APP_CONTENT_DIR", "content/lessons"))
@@ -26,7 +26,18 @@ def main() -> None:
     )
     _apply_styles()
 
-    store = ProgressStore()
+    _dsn = st.secrets.get("DATABASE_URL") if hasattr(st, "secrets") else None
+
+    if _dsn:
+        if not st.user.is_logged_in:
+            _render_login_page()
+            st.stop()
+        from learning_app.pg_storage import ProgressStore as _PGStore
+        store = _PGStore(user_id=st.user.sub, dsn=_dsn)
+        _maybe_seed_display_name(store, st.user.name or "")
+    else:
+        store = _SQLiteStore()
+
     lessons = load_lessons(DEFAULT_CONTENT_DIR)
     progress = store.get_progress()
     lesson_map = {lesson.id: lesson for lesson in lessons}
@@ -52,8 +63,26 @@ def main() -> None:
     _render_lesson(selected_lesson, store)
 
 
-def _render_sidebar(lessons: list[Lesson], progress: dict, store: ProgressStore) -> None:
+def _render_login_page() -> None:
+    st.title("Python Foundations Lab")
+    st.markdown("Sign in with GitHub to track your progress across sessions.")
+    col1, col2, col3 = st.columns([2, 1, 2])
+    with col2:
+        if st.button("Sign in with GitHub", use_container_width=True, type="primary"):
+            st.login("github")
+
+
+def _maybe_seed_display_name(store, provider_name: str) -> None:
+    if provider_name and store.get_display_name() == "Learner":
+        store.save_display_name(provider_name)
+
+
+def _render_sidebar(lessons: list[Lesson], progress: dict, store) -> None:
     st.markdown("### 🐍 Python Foundations Lab")
+
+    if st.secrets.get("DATABASE_URL") if hasattr(st, "secrets") else False:
+        if st.button("Sign out", use_container_width=True):
+            st.logout()
 
     display_name = st.text_input(
         "name",

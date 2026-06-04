@@ -35,7 +35,7 @@ def default_db_path() -> Path:
 
 
 class ProgressStore:
-    def __init__(self, db_path: Path | None = None) -> None:
+    def __init__(self, db_path: Path | None = None, user_id: str | None = None) -> None:
         self.db_path = db_path or default_db_path()
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self._migrate()
