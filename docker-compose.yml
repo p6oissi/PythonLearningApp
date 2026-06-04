@@ -1,0 +1,13 @@
+services:
+  learning-app:
+    build: .
+    ports:
+      - "8501:8501"
+    volumes:
+      - learning_progress:/app/data
+    environment:
+      LEARNING_APP_DATA_DIR: /app/data
+      LEARNING_APP_CONTENT_DIR: /app/content/lessons
+
+volumes:
+  learning_progress:

@@ -1,0 +1,351 @@
+lessons:
+
+  # ─── Chapter 5: Simple Analysis ─────────────────────────────────────────────
+
+  - id: py-014-statistics
+    chapter: "5. Simple Analysis"
+    title: "Basic Statistics"
+    summary: "Describe a dataset with mean, median, min, max, and spread."
+    outcome: "You will compute five core statistics for a dataset and store them in a summary dictionary."
+    body_markdown: |
+      Before building any model, you must understand your data. The first five questions
+      every data scientist asks about a numeric column are:
+
+      1. **What is the average?** (mean) — the centre of the data
+      2. **What is the middle value?** (median) — less sensitive to outliers than the mean
+      3. **What is the smallest value?** (min)
+      4. **What is the largest value?** (max)
+      5. **How spread out is it?** (range = max - min)
+
+      **Computing these in plain Python:**
+      ```python
+      values = [10, 20, 15, 8, 25, 12]
+
+      mean = sum(values) / len(values)           # 15.0
+
+      sorted_v = sorted(values)
+      n = len(sorted_v)
+      if n % 2 == 1:
+          median = sorted_v[n // 2]              # odd count: middle item
+      else:
+          median = (sorted_v[n//2 - 1] + sorted_v[n//2]) / 2  # even: average of two middles
+
+      minimum = min(values)                       # 8
+      maximum = max(values)                       # 25
+      data_range = maximum - minimum              # 17
+      ```
+
+      The **mean** is pulled toward extreme values (outliers). The **median** is not.
+      If mean >> median, your data probably has high outliers (very common in real datasets).
+    example_code: |
+      response_times_ms = [120, 135, 118, 142, 1850, 129, 115, 138]
+
+      mean_rt = round(sum(response_times_ms) / len(response_times_ms), 1)
+
+      sorted_rt = sorted(response_times_ms)
+      n = len(sorted_rt)
+      median_rt = (sorted_rt[n//2 - 1] + sorted_rt[n//2]) / 2
+
+      print(f"Mean:   {mean_rt} ms")
+      print(f"Median: {median_rt} ms")
+      print(f"Min/Max: {min(sorted_rt)} / {max(sorted_rt)} ms")
+      print("(Mean >> Median suggests an outlier)")
+    hints:
+      - "mean = round(sum(values) / len(values), 2). Sort the list first before computing median."
+      - "For median: sorted_v = sorted(values). If len is even, average the two middle items. If odd, take the middle one."
+      - "data_range = maximum - minimum. Store everything in stats_summary as a dictionary."
+    exercise:
+      prompt: |
+        Analyse this exam score dataset:
+
+        ```python
+        scores = [72, 85, 91, 68, 79, 55, 88, 76, 93, 61]
+        ```
+
+        Compute:
+        - `mean_score` — average, rounded to 2 decimal places
+        - `median_score` — the median (handle even-length list correctly)
+        - `min_score` — minimum
+        - `max_score` — maximum
+        - `data_range` — max minus min
+
+        Then build `stats_summary` — a dict with keys `"mean"`, `"median"`, `"min"`, `"max"`, `"range"`.
+
+        Print `stats_summary`.
+      starter_code: |
+        scores = [72, 85, 91, 68, 79, 55, 88, 76, 93, 61]
+
+        mean_score = 0
+        median_score = 0
+        min_score = 0
+        max_score = 0
+        data_range = 0
+
+        stats_summary = {}
+
+        print(stats_summary)
+      success_message: "You computed a five-number summary. This is the first step in every exploratory analysis."
+      tests:
+        - name: "mean_score is correct"
+          assertion: "assert m.mean_score == 76.8"
+          hint: "sum([72,85,91,68,79,55,88,76,93,61]) = 768. 768/10 = 76.8"
+        - name: "median_score is correct"
+          assertion: "assert m.median_score == 77.5"
+          hint: "Sorted: [55,61,68,72,76,79,85,88,91,93]. Even length: average items 4 and 5 (index 4 and 5): (76+79)/2 = 77.5"
+        - name: "min and max are correct"
+          assertion: "assert m.min_score == 55 and m.max_score == 93"
+          hint: "Use min(scores) and max(scores)"
+        - name: "data_range is correct"
+          assertion: "assert m.data_range == 38"
+          hint: "93 - 55 = 38"
+        - name: "stats_summary contains all keys with correct values"
+          assertion: "assert m.stats_summary == {'mean': 76.8, 'median': 77.5, 'min': 55, 'max': 93, 'range': 38}"
+          hint: "Build the dict from your computed variables: stats_summary = {'mean': mean_score, ...}"
+
+  - id: py-015-sorting-filtering
+    chapter: "5. Simple Analysis"
+    title: "Sorting and Filtering"
+    summary: "Find top performers, remove outliers, and rank data."
+    outcome: "You will filter outliers from a dataset, rank the remaining records, and extract the top three."
+    body_markdown: |
+      Once you have data in a list, two of the most common operations are:
+      - **Filtering** — keep only rows that meet a condition
+      - **Sorting** — put rows in order
+
+      **Filtering with a list comprehension:**
+      ```python
+      scores = [72, 85, 91, 50, 68, 94]
+      passing = [s for s in scores if s >= 70]
+      # [72, 85, 91, 68, 94] — wait, 68 < 70, so: [72, 85, 91, 94]
+      ```
+
+      A list comprehension is a compact loop-and-filter:
+      ```python
+      [expression for item in iterable if condition]
+      ```
+
+      **Sorting:**
+      ```python
+      sorted_scores = sorted(scores)              # ascending (low → high)
+      sorted_desc = sorted(scores, reverse=True)  # descending (high → low)
+      ```
+
+      **Sorting dicts by a field:**
+      ```python
+      records = [{"name": "Ada", "score": 92}, {"name": "Ben", "score": 78}]
+      ranked = sorted(records, key=lambda r: r["score"], reverse=True)
+      ```
+
+      `lambda r: r["score"]` is a tiny anonymous function that tells `sorted` which value to compare.
+
+      **Top N:**
+      ```python
+      top3 = ranked[:3]   # slice the first 3 items
+      ```
+    example_code: |
+      products = [
+          {"name": "Widget A", "sales": 450},
+          {"name": "Widget B", "sales": 1200},
+          {"name": "Widget C", "sales": 80},
+          {"name": "Widget D", "sales": 670},
+          {"name": "Widget E", "sales": 3100},
+      ]
+
+      active = [p for p in products if p["sales"] >= 100]
+      ranked = sorted(active, key=lambda p: p["sales"], reverse=True)
+      top2 = ranked[:2]
+
+      for i, p in enumerate(top2, 1):
+          print(f"{i}. {p['name']}: {p['sales']} units")
+    hints:
+      - "Filter outliers with a list comprehension: `filtered = [s for s in scores if low <= s <= high]` where low = mean - 2*std_approx."
+      - "For a simple outlier rule, use: keep scores between mean - 30 and mean + 30 (or just < mean + 2*(range/4) — but the test uses a specific threshold). Try: keep values between 40 and 100."
+      - "Sort descending: `sorted(filtered, reverse=True)`. Top 3: `top_3 = sorted_scores[:3]`."
+    exercise:
+      prompt: |
+        You have student scores that include some outliers (scores outside 0-100 are data errors):
+
+        ```python
+        scores = [85, 92, -5, 78, 110, 65, 88, 72, 91, 200, 55, 83]
+        ```
+
+        Create:
+        - `filtered_scores` — only scores between 0 and 100 (inclusive)
+        - `outliers` — scores that were removed (outside 0–100)
+        - `sorted_scores` — `filtered_scores` sorted from highest to lowest
+        - `top_3` — the three highest valid scores
+        - `bottom_3` — the three lowest valid scores
+
+        Print all five.
+      starter_code: |
+        scores = [85, 92, -5, 78, 110, 65, 88, 72, 91, 200, 55, 83]
+
+        filtered_scores = []
+        outliers = []
+        sorted_scores = []
+        top_3 = []
+        bottom_3 = []
+
+        print(filtered_scores, outliers, sorted_scores, top_3, bottom_3)
+      success_message: "You cleaned, sorted, and ranked a dataset. These three steps open every data analysis."
+      tests:
+        - name: "filtered_scores are correct"
+          assertion: "assert m.filtered_scores == [85, 92, 78, 65, 88, 72, 91, 55, 83]"
+          hint: "Keep scores where 0 <= score <= 100. Remove -5, 110, and 200."
+        - name: "outliers are correct"
+          assertion: "assert m.outliers == [-5, 110, 200]"
+          hint: "Outliers are scores < 0 or > 100: -5, 110, 200 (in original order)."
+        - name: "sorted_scores is descending"
+          assertion: "assert m.sorted_scores == [92, 91, 88, 85, 83, 78, 72, 65, 55]"
+          hint: "sorted(filtered_scores, reverse=True)"
+        - name: "top_3 is correct"
+          assertion: "assert m.top_3 == [92, 91, 88]"
+          hint: "sorted_scores[:3]"
+        - name: "bottom_3 is correct"
+          assertion: "assert m.bottom_3 == [72, 65, 55]"
+          hint: "sorted_scores[-3:] — or sorted_scores[len(sorted_scores)-3:]"
+
+  # ─── Chapter 6: Mini Project ─────────────────────────────────────────────────
+
+  - id: py-016-final-report
+    chapter: "6. Mini Project"
+    title: "Build a Data Pipeline"
+    summary: "Connect everything: load, clean, validate, analyse, and report."
+    outcome: "You will write a complete mini pipeline that takes raw CSV text and produces a formatted analysis report."
+    body_markdown: |
+      This is your first complete data pipeline. It combines every skill from this course:
+
+      1. **Load** — parse CSV text into records
+      2. **Clean** — strip whitespace, normalise text
+      3. **Validate** — convert types, track failures
+      4. **Analyse** — compute statistics on the valid data
+      5. **Report** — format a human-readable summary
+
+      Real pipelines in industry follow exactly this structure.
+      The tools change (pandas, Spark, SQL) but the pattern stays the same.
+
+      **Connecting the pieces:**
+      ```python
+      # 1. Load
+      rows = list(csv.DictReader(StringIO(raw_csv)))
+
+      # 2-3. Clean + validate in one pass
+      scores = []
+      errors = []
+      for row in rows:
+          raw_score = row.get("score", "").strip()
+          try:
+              scores.append(float(raw_score))
+          except ValueError:
+              errors.append(raw_score)
+
+      # 4. Analyse
+      if scores:
+          mean = round(sum(scores) / len(scores), 2)
+          ...
+
+      # 5. Report
+      report = f"Processed {len(rows)} rows. Valid: {len(scores)}, Errors: {len(errors)}. Mean: {mean}"
+      ```
+
+      The most important principle: **separate each stage**. A function (or at minimum a block
+      of code) for loading, one for cleaning, one for analysis. This makes it easy to test and
+      debug each stage independently.
+    example_code: |
+      import csv
+      from io import StringIO
+
+      raw_csv = "product,price,units\nAlpha,12.5,200\nBeta,bad,150\nGamma,8.75,300"
+
+      rows = list(csv.DictReader(StringIO(raw_csv)))
+      prices = []
+      errors = []
+
+      for row in rows:
+          try:
+              prices.append(float(row["price"].strip()))
+          except ValueError:
+              errors.append(row["product"])
+
+      mean_price = round(sum(prices) / len(prices), 2) if prices else 0
+
+      report = (
+          f"Products: {len(rows)} | "
+          f"Parsed: {len(prices)} | "
+          f"Errors: {len(errors)} | "
+          f"Avg price: ${mean_price}"
+      )
+      print(report)
+    hints:
+      - "Start with `rows = list(csv.DictReader(StringIO(csv_text)))`. Then loop over rows to clean and convert scores."
+      - "For each row: try to convert `row['score'].strip()` to float. Catch ValueError, append raw name to `failed_names`. Build `valid_scores` from successes."
+      - "After the loop: mean = round(sum(valid_scores)/len(valid_scores), 2). normalized = [round(s/100, 2) for s in valid_scores]. Build report string with all four values."
+    exercise:
+      prompt: |
+        Process the following student results CSV:
+
+        ```python
+        csv_text = (
+            "name,score\n"
+            "Ada,88\n"
+            "Ben,missing\n"
+            "Cara,95\n"
+            "Dan,72\n"
+            "Eva,N/A\n"
+            "Finn,81"
+        )
+        ```
+
+        Build a pipeline that creates:
+        - `rows` — all parsed CSV rows
+        - `valid_scores` — list of successfully converted float scores
+        - `failed_names` — names of students whose score could not be converted
+        - `mean_score` — average of valid scores, rounded to 2 decimal places
+        - `normalized_scores` — each valid score divided by 100, rounded to 2 decimal places
+        - `report` — a string that contains the total row count, valid count, failure count, and mean score
+
+        Print `report`.
+      starter_code: |
+        import csv
+        from io import StringIO
+
+        csv_text = (
+            "name,score\n"
+            "Ada,88\n"
+            "Ben,missing\n"
+            "Cara,95\n"
+            "Dan,72\n"
+            "Eva,N/A\n"
+            "Finn,81"
+        )
+
+        rows = []
+        valid_scores = []
+        failed_names = []
+        mean_score = 0
+        normalized_scores = []
+        report = ""
+
+        # Build your pipeline here
+
+        print(report)
+      success_message: "You built your first complete data pipeline. This is the foundation every data science project stands on."
+      tests:
+        - name: "rows parsed correctly"
+          assertion: "assert len(m.rows) == 6"
+          hint: "rows = list(csv.DictReader(StringIO(csv_text))) should give 6 rows."
+        - name: "valid_scores are correct"
+          assertion: "assert m.valid_scores == [88.0, 95.0, 72.0, 81.0]"
+          hint: "Ada, Cara, Dan, Finn have valid scores. Convert with float(row['score'].strip())."
+        - name: "failed_names are correct"
+          assertion: "assert m.failed_names == ['Ben', 'Eva']"
+          hint: "Ben has 'missing' and Eva has 'N/A' — both raise ValueError when converted with float()."
+        - name: "mean_score is correct"
+          assertion: "assert m.mean_score == 84.0"
+          hint: "(88 + 95 + 72 + 81) / 4 = 336 / 4 = 84.0"
+        - name: "normalized_scores are correct"
+          assertion: "assert m.normalized_scores == [0.88, 0.95, 0.72, 0.81]"
+          hint: "Divide each valid score by 100 and round to 2 decimal places."
+        - name: "report contains key metrics"
+          assertion: "assert '6' in m.report and '4' in m.report and '2' in m.report and '84' in m.report"
+          hint: "Report must mention: 6 total rows, 4 valid, 2 failures, and mean 84.0."

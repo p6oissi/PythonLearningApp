@@ -1,0 +1,1189 @@
+lessons:
+
+  # ─── Chapter 1: Python Basics ───────────────────────────────────────────────
+
+  - id: py-001-values-variables
+    chapter: "1. Python Basics"
+    title: "Values and Variables"
+    summary: "Give names to data so you can reuse and describe it."
+    outcome: "You will create variables for a small dataset description and print a readable summary."
+    body_markdown: |
+      A **value** is any piece of information: a name, a number, a yes/no flag.
+
+      A **variable** is a label you attach to a value so you can refer to it later.
+      Think of it like a sticky note on a box — the note says what is inside.
+
+      ```
+      dataset_name = "customer survey"
+      ```
+
+      The `=` sign means "store this value under this name". It is not asking a question —
+      it is making an assignment.
+
+      Variable names should be descriptive. In data work, vague names like `x` or `d` make
+      code impossible to understand a week later.
+
+      Three types you will use most:
+      - **`str`** (text) — always inside quotes: `"hello"`
+      - **`int`** (whole number) — no quotes: `42`
+      - **`bool`** (true/false) — `True` or `False`, capital first letter
+
+      An **f-string** lets you combine variables into a sentence:
+      ```python
+      name = "Ada"
+      count = 120
+      print(f"Dataset: {name}, rows: {count}")
+      ```
+    example_code: |
+      dataset_name = "training scores"
+      row_count = 120
+      has_missing_values = True
+
+      summary = f"{dataset_name}: {row_count} rows, needs cleaning: {has_missing_values}"
+      print(summary)
+    hints:
+      - "A variable is created with `name = value`. Make sure the string uses quotes and the number does not."
+      - "For the summary, use an f-string: `summary = f\"...{dataset_name}...{row_count}...\"`"
+      - "The tests check exact values: `dataset_name` must equal `\"customer survey\"` and `row_count` must equal `48`."
+    exercise:
+      prompt: |
+        Create these four variables:
+
+        - `dataset_name` with the value `"customer survey"`
+        - `row_count` with the value `48`
+        - `has_missing_values` with the value `True`
+        - `summary` — an f-string sentence that mentions both the dataset name and the row count
+
+        Print `summary`.
+      starter_code: |
+        dataset_name = ""
+        row_count = 0
+        has_missing_values = False
+        summary = ""
+
+        print(summary)
+      success_message: "You created your first reusable data summary. Variables are the building blocks of every program."
+      tests:
+        - name: "dataset_name is correct"
+          assertion: "assert m.dataset_name == 'customer survey'"
+          hint: "Use the exact text: customer survey (no capital letters)"
+        - name: "row_count is correct"
+          assertion: "assert m.row_count == 48"
+          hint: "Use an integer (no quotes around the number)."
+        - name: "has_missing_values is True"
+          assertion: "assert m.has_missing_values is True"
+          hint: "Python booleans are True and False — capital first letter, no quotes."
+        - name: "summary contains name and row count"
+          assertion: "assert 'customer survey' in m.summary and '48' in m.summary"
+          hint: "Your f-string should include both {dataset_name} and {row_count}."
+
+  - id: py-002-numbers-math
+    chapter: "1. Python Basics"
+    title: "Numbers and Math"
+    summary: "Do calculations and compare values — the core of every data analysis."
+    outcome: "You will compute a percentage score, round it, and check whether it is a passing grade."
+    body_markdown: |
+      Python has two number types:
+      - **`int`** — whole numbers: `5`, `100`, `-3`
+      - **`float`** — decimal numbers: `3.14`, `0.9`, `-1.5`
+
+      **Arithmetic operators:**
+
+      | Operator | Meaning | Example | Result |
+      |---|---|---|---|
+      | `+` | add | `3 + 2` | `5` |
+      | `-` | subtract | `10 - 4` | `6` |
+      | `*` | multiply | `3 * 4` | `12` |
+      | `/` | divide (always float) | `7 / 2` | `3.5` |
+      | `//` | floor divide (whole) | `7 // 2` | `3` |
+      | `%` | remainder | `7 % 2` | `1` |
+      | `**` | power | `2 ** 3` | `8` |
+
+      **Comparison operators** return `True` or `False`:
+      `==`, `!=`, `<`, `>`, `<=`, `>=`
+
+      **Useful built-ins:**
+      - `round(3.14159, 2)` → `3.14`
+      - `abs(-5)` → `5`
+      - `int(3.9)` → `3` (truncates, does not round)
+    example_code: |
+      correct = 17
+      total = 20
+      score_pct = (correct / total) * 100
+      score_rounded = round(score_pct, 1)
+      passed = score_pct >= 70
+
+      print(f"Score: {score_rounded}%")
+      print(f"Passed: {passed}")
+    hints:
+      - "Percentage is `(score / max_score) * 100`. Use `/` for division, `*` for multiplication."
+      - "Use `round(value, 2)` to round to 2 decimal places. Use `>= 60` to check if passing."
+      - "`is_passing` should be a boolean: `is_passing = percentage >= 60`"
+    exercise:
+      prompt: |
+        A student answered `42` questions correctly out of `70` total.
+
+        Create:
+        - `score` set to `42`
+        - `max_score` set to `70`
+        - `percentage` — the score as a percentage (score divided by max_score, times 100)
+        - `percentage_rounded` — rounded to 2 decimal places
+        - `is_passing` — `True` if percentage is 60 or above, otherwise `False`
+
+        Print all five values.
+      starter_code: |
+        score = 0
+        max_score = 0
+        percentage = 0
+        percentage_rounded = 0
+        is_passing = False
+
+        print(score, max_score, percentage, percentage_rounded, is_passing)
+      success_message: "Excellent! You computed a real grade. These same steps appear in model accuracy calculations."
+      tests:
+        - name: "score and max_score are set"
+          assertion: "assert m.score == 42 and m.max_score == 70"
+          hint: "Set score = 42 and max_score = 70."
+        - name: "percentage is calculated correctly"
+          assertion: "assert abs(m.percentage - 60.0) < 0.01"
+          hint: "percentage = (score / max_score) * 100 — result should be 60.0"
+        - name: "percentage_rounded has 2 decimal places"
+          assertion: "assert m.percentage_rounded == 60.0"
+          hint: "Use round(percentage, 2)"
+        - name: "is_passing is True"
+          assertion: "assert m.is_passing is True"
+          hint: "60 >= 60 is True. Use >= not >"
+
+  - id: py-003-strings
+    chapter: "1. Python Basics"
+    title: "Working with Text"
+    summary: "Clean and transform text — a daily task in real data work."
+    outcome: "You will normalize a messy column name from a raw dataset into a clean, usable format."
+    body_markdown: |
+      In data work, text (strings) is everywhere: column names, categories, labels, notes.
+      Real data is rarely clean — it has extra spaces, inconsistent capitalisation, odd characters.
+
+      **Creating strings:**
+      ```python
+      name = "Ada Lovelace"
+      empty = ""
+      ```
+
+      **Essential string methods** (they return a new string, not modify in place):
+
+      | Method | What it does | Example |
+      |---|---|---|
+      | `.strip()` | remove leading/trailing whitespace | `"  hi  ".strip()` → `"hi"` |
+      | `.lower()` | lowercase everything | `"Ada".lower()` → `"ada"` |
+      | `.upper()` | uppercase everything | `"ada".upper()` → `"ADA"` |
+      | `.replace(a, b)` | swap every `a` for `b` | `"a b".replace(" ", "_")` → `"a_b"` |
+      | `.split(sep)` | cut into a list | `"a,b,c".split(",")` → `["a","b","c"]` |
+
+      **Other useful tools:**
+      - `len("hello")` → `5`
+      - `"data" in "big data"` → `True`
+      - `"Ada"[0]` → `"A"` (indexing — first character is 0)
+      - `"Ada"[-1]` → `"a"` (last character)
+
+      Chaining methods:
+      ```python
+      raw = "  Blood Pressure  "
+      clean = raw.strip().lower().replace(" ", "_")
+      # → "blood_pressure"
+      ```
+    example_code: |
+      raw_column = "  Age (Years)  "
+      clean_column = raw_column.strip().lower().replace(" ", "_").replace("(", "").replace(")", "")
+      print(clean_column)   # age_years
+      print(len(clean_column))
+    hints:
+      - "Chain methods one after another: `raw.strip().lower()...` — each method returns a new string you can call the next method on."
+      - "Replace spaces with underscores: `.replace(' ', '_')`. Then remove parentheses: `.replace('(', '').replace(')', '')`."
+      - "The word count needs `.split()` which splits on whitespace by default. `len('hello world'.split())` is 2."
+    exercise:
+      prompt: |
+        You receive a messy column name from a spreadsheet: `"  Total Score (%) "`.
+
+        Create:
+        - `raw` set to `"  Total Score (%) "`
+        - `cleaned` — strip whitespace, lowercase, replace spaces with underscores, remove `(`, `)`, and `%`
+        - `word_count` — the number of words in `raw` after stripping (use `.split()`)
+        - `starts_with_t` — `True` if `cleaned` starts with the letter `"t"`
+
+        Print all four values.
+      starter_code: |
+        raw = "  Total Score (%) "
+        cleaned = ""
+        word_count = 0
+        starts_with_t = False
+
+        print(raw, cleaned, word_count, starts_with_t)
+      success_message: "You cleaned your first messy column name. This exact pattern appears in every real data pipeline."
+      tests:
+        - name: "cleaned is correct"
+          assertion: "assert m.cleaned == 'total_score_'"
+          hint: "Chain: .strip().lower().replace(' ', '_').replace('(', '').replace(')', '').replace('%', '')"
+        - name: "word_count is correct"
+          assertion: "assert m.word_count == 3"
+          hint: "After stripping, 'Total Score (%)' has 3 words. Use len(raw.strip().split())"
+        - name: "starts_with_t is True"
+          assertion: "assert m.starts_with_t is True"
+          hint: "cleaned[0] == 't' or cleaned.startswith('t') — both work"
+
+  - id: py-004-lists
+    chapter: "1. Python Basics"
+    title: "Lists"
+    summary: "Store ordered collections of values — like a column of data."
+    outcome: "You will build a list of measurements and compute basic facts about it."
+    body_markdown: |
+      A **list** holds multiple values in order, inside square brackets:
+      ```python
+      scores = [72, 85, 91, 68, 79]
+      ```
+
+      Think of it like a column in a spreadsheet — each row has a position (index).
+
+      **Indexing** — accessing individual items:
+      ```python
+      scores[0]   # 72  (first item — indexing starts at 0)
+      scores[-1]  # 79  (last item)
+      scores[1:3] # [85, 91]  (slice: items 1 and 2, not 3)
+      ```
+
+      **Useful operations:**
+
+      | Code | Result |
+      |---|---|
+      | `len(scores)` | number of items |
+      | `sum(scores)` | total |
+      | `min(scores)` | smallest value |
+      | `max(scores)` | largest value |
+      | `scores.append(95)` | add 95 to the end |
+      | `95 in scores` | True/False membership check |
+
+      Lists can hold any type, but in data work each list usually holds one type (all numbers, all strings).
+    example_code: |
+      temperatures = [22.1, 19.8, 24.5, 21.0, 23.3]
+
+      count = len(temperatures)
+      total = sum(temperatures)
+      average = total / count
+      hottest = max(temperatures)
+
+      print(f"Readings: {count}, Average: {round(average, 1)}°C, Peak: {hottest}°C")
+    hints:
+      - "Create a list with square brackets: `measurements = [1.2, 3.4, ...]`. Use `len()`, `sum()`, `min()`, `max()` directly on it."
+      - "Average = sum / count. `range_val = max(...) - min(...)` gives the spread."
+      - "To get the second value use index `[1]`. To check membership: `1.2 in measurements` returns True or False."
+    exercise:
+      prompt: |
+        You have blood pressure readings (in mmHg): `120, 135, 118, 142, 129`.
+
+        Create:
+        - `measurements` — a list of those five numbers
+        - `count` — how many readings
+        - `total` — sum of all readings
+        - `average` — total divided by count, rounded to 1 decimal place
+        - `highest` — the maximum reading
+        - `lowest` — the minimum reading
+        - `range_val` — highest minus lowest
+
+        Print all values.
+      starter_code: |
+        measurements = []
+        count = 0
+        total = 0
+        average = 0
+        highest = 0
+        lowest = 0
+        range_val = 0
+
+        print(measurements, count, total, average, highest, lowest, range_val)
+      success_message: "You summarised a dataset with six statistics. This is exactly what exploratory data analysis looks like."
+      tests:
+        - name: "measurements has 5 correct values"
+          assertion: "assert m.measurements == [120, 135, 118, 142, 129]"
+          hint: "List items are separated by commas inside square brackets."
+        - name: "count is 5"
+          assertion: "assert m.count == 5"
+          hint: "Use len(measurements)"
+        - name: "total is correct"
+          assertion: "assert m.total == 644"
+          hint: "Use sum(measurements)"
+        - name: "average is rounded correctly"
+          assertion: "assert m.average == 128.8"
+          hint: "average = round(total / count, 1)"
+        - name: "highest and lowest are correct"
+          assertion: "assert m.highest == 142 and m.lowest == 118"
+          hint: "Use max(measurements) and min(measurements)"
+        - name: "range_val is correct"
+          assertion: "assert m.range_val == 24"
+          hint: "range_val = highest - lowest"
+
+  - id: py-005-dicts
+    chapter: "1. Python Basics"
+    title: "Dictionaries"
+    summary: "Store one record as key-value pairs — like a single row of data."
+    outcome: "You will represent a data record as a dictionary and access its fields."
+    body_markdown: |
+      A **dictionary** stores pairs of keys and values, inside curly braces:
+      ```python
+      patient = {
+          "name": "Ada",
+          "age": 34,
+          "diabetic": False,
+      }
+      ```
+
+      Think of it like one row in a spreadsheet where each column has a name (key).
+
+      **Accessing values:**
+      ```python
+      patient["name"]         # "Ada"  — raises error if key missing
+      patient.get("weight")   # None   — safe, returns None if missing
+      patient.get("age", 0)   # 34     — returns default if missing
+      ```
+
+      **Modifying:**
+      ```python
+      patient["age"] = 35              # update existing key
+      patient["weight_kg"] = 68.5      # add new key
+      del patient["diabetic"]          # remove a key
+      ```
+
+      **Looping over a dict:**
+      ```python
+      for key, value in patient.items():
+          print(key, "→", value)
+      ```
+
+      **Other useful methods:**
+      - `patient.keys()` — all keys
+      - `patient.values()` — all values
+      - `"age" in patient` — True/False check
+    example_code: |
+      sensor_reading = {
+          "sensor_id": "T-01",
+          "value": 98.6,
+          "unit": "fahrenheit",
+          "valid": True,
+      }
+
+      celsius = (sensor_reading["value"] - 32) * 5 / 9
+      sensor_reading["celsius"] = round(celsius, 1)
+
+      print(sensor_reading["sensor_id"], "→", sensor_reading["celsius"], "°C")
+    hints:
+      - "Create the dict with `feature = {'name': ..., 'count': ..., ...}`. Each key is a string in quotes."
+      - "To add or update a key: `feature['mean'] = total / count`. You can compute the mean from your lists."
+      - "Use `feature.get('category', 'unknown')` to safely access a key that might not exist."
+    exercise:
+      prompt: |
+        You are describing a dataset feature (column).
+
+        Create a dictionary called `feature` with these keys:
+        - `"name"` → `"age"`
+        - `"count"` → `100`
+        - `"missing"` → `3`
+        - `"mean"` → `42.7`
+        - `"is_numeric"` → `True`
+
+        Then add a new key `"missing_pct"` whose value is `missing / count * 100`, rounded to 1 decimal.
+
+        Print the dictionary and then print `feature["missing_pct"]`.
+      starter_code: |
+        feature = {}
+
+        # Add missing_pct here
+
+        print(feature)
+        print(feature["missing_pct"])
+      success_message: "You built a feature metadata record. Data scientists store exactly this kind of information about every column."
+      tests:
+        - name: "feature has all required keys"
+          assertion: "assert all(k in m.feature for k in ['name','count','missing','mean','is_numeric'])"
+          hint: "Make sure you include all five keys with the exact names shown."
+        - name: "core values are correct"
+          assertion: "assert m.feature['name'] == 'age' and m.feature['count'] == 100 and m.feature['is_numeric'] is True"
+          hint: "Check spelling and types: is_numeric should be True (boolean), not 'True' (string)."
+        - name: "missing_pct is calculated correctly"
+          assertion: "assert m.feature['missing_pct'] == 3.0"
+          hint: "missing_pct = round(3 / 100 * 100, 1) = 3.0"
+
+  # ─── Chapter 2: Program Flow ─────────────────────────────────────────────────
+
+  - id: py-006-conditions
+    chapter: "2. Program Flow"
+    title: "Conditions"
+    summary: "Make decisions in code — classify values based on rules."
+    outcome: "You will write a score classifier that labels data points into quality categories."
+    body_markdown: |
+      A program that always does the same thing regardless of input is not very useful.
+      **Conditions** let code take different paths based on data.
+
+      ```python
+      if score >= 90:
+          label = "excellent"
+      elif score >= 70:
+          label = "good"
+      elif score >= 50:
+          label = "needs work"
+      else:
+          label = "failing"
+      ```
+
+      **Important:**
+      - Indentation (4 spaces) is how Python knows what belongs inside each branch
+      - `elif` means "else if" — checked only when the previous condition was False
+      - `else` is the catch-all — runs when nothing above matched
+
+      **Combining conditions:**
+      ```python
+      if score >= 0 and score <= 100:   # both must be True
+          ...
+      if score < 0 or score > 100:      # at least one must be True
+          ...
+      if not is_valid:                   # flip True/False
+          ...
+      ```
+
+      **Common mistakes:**
+      - `=` assigns a value; `==` compares two values
+      - Missing the colon `:` at the end of `if`/`elif`/`else`
+    example_code: |
+      temperature = 38.5  # body temperature in Celsius
+
+      if temperature >= 39.5:
+          status = "high fever"
+      elif temperature >= 38.0:
+          status = "mild fever"
+      elif temperature >= 36.0:
+          status = "normal"
+      else:
+          status = "below normal"
+
+      print(f"{temperature}°C → {status}")
+    hints:
+      - "Start with `if score >= 90:` and work down. Each branch must have a colon and indented body."
+      - "Use `elif` for the middle categories, `else` for the catch-all. Check order matters — higher thresholds first."
+      - "For the valid check: `is_valid = score >= 0 and score <= 100`. Use `and` to require both conditions."
+    exercise:
+      prompt: |
+        Classify a model's accuracy score into a quality label.
+
+        Given `score = 0.76`, write conditions to set:
+        - `label`:
+          - `"excellent"` if score >= 0.90
+          - `"good"` if score >= 0.75
+          - `"fair"` if score >= 0.60
+          - `"poor"` otherwise
+        - `is_valid` — `True` if score is between 0.0 and 1.0 (inclusive), `False` otherwise
+
+        Print both values.
+      starter_code: |
+        score = 0.76
+        label = ""
+        is_valid = False
+
+        # Write your conditions here
+
+        print(label, is_valid)
+      success_message: "You wrote a classifier. Machine learning pipelines use exactly this logic to bucket predictions."
+      tests:
+        - name: "label is 'good'"
+          assertion: "assert m.label == 'good'"
+          hint: "0.76 >= 0.75 but < 0.90, so it should be 'good'."
+        - name: "is_valid is True"
+          assertion: "assert m.is_valid is True"
+          hint: "0.76 is between 0 and 1, so is_valid = True. Use `score >= 0 and score <= 1`."
+
+  - id: py-007-for-loops
+    chapter: "2. Program Flow"
+    title: "For Loops"
+    summary: "Repeat an action for every item in a list — the core of data processing."
+    outcome: "You will clean a column of raw values and compute a count and total in one pass."
+    body_markdown: |
+      A **for loop** runs the same code once for each item in a list:
+      ```python
+      for value in scores:
+          print(value)
+      ```
+
+      This is the fundamental pattern of data processing: visit every record, decide what to do with it.
+
+      **The accumulator pattern** — building a result as you go:
+      ```python
+      total = 0
+      for value in scores:
+          total = total + value   # same as: total += value
+      ```
+
+      **Filtering while looping:**
+      ```python
+      clean = []
+      for value in scores:
+          if value is not None and value >= 0:
+              clean.append(value)
+      ```
+
+      **`enumerate`** gives you the index too:
+      ```python
+      for index, value in enumerate(scores):
+          print(f"Row {index}: {value}")
+      ```
+
+      **`range`** generates numbers:
+      ```python
+      for i in range(5):      # 0, 1, 2, 3, 4
+          print(i)
+      for i in range(2, 8):   # 2, 3, 4, 5, 6, 7
+          print(i)
+      ```
+    example_code: |
+      raw_temps = [36.8, None, 37.2, -99, 38.1, 36.5, None]
+
+      valid_temps = []
+      skipped = 0
+
+      for temp in raw_temps:
+          if temp is not None and temp > 0:
+              valid_temps.append(temp)
+          else:
+              skipped += 1
+
+      print(f"Valid: {valid_temps}")
+      print(f"Skipped: {skipped}, Total valid: {len(valid_temps)}")
+    hints:
+      - "Use two lists: one for valid values and one for (or just a counter for) invalid ones. Build them inside a for loop."
+      - "A value is valid if it is not None AND it is greater than 0. Use `if value is not None and value > 0:`"
+      - "After the loop, `valid_total = sum(valid_values)` and `valid_count = len(valid_values)`."
+    exercise:
+      prompt: |
+        You have a column of raw sensor readings that may contain `None` or negative values.
+
+        ```python
+        raw_values = [5.2, None, 8.1, -1.0, 7.4, None, 6.9, -0.5, 9.0]
+        ```
+
+        Using a for loop, create:
+        - `valid_values` — list of values that are not `None` and greater than `0`
+        - `invalid_count` — how many values were skipped
+        - `valid_total` — sum of all valid values (rounded to 1 decimal)
+        - `valid_count` — number of valid values
+
+        Print all four.
+      starter_code: |
+        raw_values = [5.2, None, 8.1, -1.0, 7.4, None, 6.9, -0.5, 9.0]
+
+        valid_values = []
+        invalid_count = 0
+        valid_total = 0
+        valid_count = 0
+
+        # Write your loop here
+
+        print(valid_values, invalid_count, valid_total, valid_count)
+      success_message: "You built a data cleaning pass. Every preprocessing pipeline starts with a loop exactly like this."
+      tests:
+        - name: "valid_values contains the right items"
+          assertion: "assert m.valid_values == [5.2, 8.1, 7.4, 6.9, 9.0]"
+          hint: "Keep values that are not None AND greater than 0. -1.0 and -0.5 should be excluded."
+        - name: "invalid_count is correct"
+          assertion: "assert m.invalid_count == 4"
+          hint: "Two Nones + two negatives = 4 skipped values."
+        - name: "valid_total is correct"
+          assertion: "assert m.valid_total == 37.6"
+          hint: "Sum the valid list and round to 1 decimal: round(sum(valid_values), 1)"
+        - name: "valid_count is correct"
+          assertion: "assert m.valid_count == 5"
+          hint: "valid_count = len(valid_values)"
+
+  - id: py-008-while-loops
+    chapter: "2. Program Flow"
+    title: "While Loops"
+    summary: "Repeat until a condition is met — useful for search and retry patterns."
+    outcome: "You will scan a list to find the first value above a threshold and track how many steps it took."
+    body_markdown: |
+      A **while loop** keeps running as long as a condition is True:
+      ```python
+      count = 0
+      while count < 5:
+          print(count)
+          count += 1
+      ```
+
+      Use a while loop when you do not know in advance how many times you need to loop.
+      A for loop is better when you know the collection.
+
+      **`break`** — exit the loop immediately:
+      ```python
+      for value in data:
+          if value > threshold:
+              break   # stop as soon as we find one
+      ```
+
+      **`break` with an index counter:**
+      ```python
+      i = 0
+      while i < len(data):
+          if data[i] > threshold:
+              break
+          i += 1
+      # After break: i is the index of the first match (or len(data) if not found)
+      ```
+
+      **Caution:** Always make sure a while loop can eventually stop.
+      A loop with a condition that never becomes False will run forever and freeze your program.
+    example_code: |
+      readings = [0.3, 0.5, 0.4, 0.8, 0.7, 0.95, 0.6]
+      threshold = 0.85
+
+      steps = 0
+      found_value = None
+
+      for reading in readings:
+          steps += 1
+          if reading >= threshold:
+              found_value = reading
+              break
+
+      if found_value is not None:
+          print(f"Found {found_value} after {steps} step(s)")
+      else:
+          print("No value above threshold")
+    hints:
+      - "Use a for loop with a counter: `steps = 0`. Inside the loop, `steps += 1` and check if the value meets the condition."
+      - "Use `break` to stop the loop as soon as you find the value. Set `first_above` before breaking."
+      - "If the loop finishes without breaking, `first_above` stays `None`. Check `if first_above is None:` to set `found` to False."
+    exercise:
+      prompt: |
+        You are scanning a list of model confidence scores to find the first one above 0.80.
+
+        ```python
+        confidences = [0.55, 0.62, 0.71, 0.68, 0.84, 0.79, 0.91]
+        threshold = 0.80
+        ```
+
+        Create:
+        - `first_above` — the first confidence value above the threshold (or `None` if none found)
+        - `steps_taken` — how many values were checked before finding it (including the match)
+        - `found` — `True` if a value was found, `False` otherwise
+
+        Print all three.
+      starter_code: |
+        confidences = [0.55, 0.62, 0.71, 0.68, 0.84, 0.79, 0.91]
+        threshold = 0.80
+
+        first_above = None
+        steps_taken = 0
+        found = False
+
+        # Write your loop here
+
+        print(first_above, steps_taken, found)
+      success_message: "You implemented a linear scan. This is the basis for early-stopping and threshold search in ML."
+      tests:
+        - name: "first_above is correct"
+          assertion: "assert m.first_above == 0.84"
+          hint: "0.84 is the first value greater than 0.80 in the list."
+        - name: "steps_taken is correct"
+          assertion: "assert m.steps_taken == 5"
+          hint: "Count each value checked including the matching one: 0.55, 0.62, 0.71, 0.68, 0.84 = 5 steps."
+        - name: "found is True"
+          assertion: "assert m.found is True"
+          hint: "Set found = True when you find a match (before or after the break)."
+
+  - id: py-009-functions
+    chapter: "2. Program Flow"
+    title: "Functions"
+    summary: "Package reusable logic into named, testable units."
+    outcome: "You will write two reusable preprocessing functions and call them on real data."
+    body_markdown: |
+      A **function** wraps a piece of logic behind a name so you can use it many times
+      without rewriting it:
+
+      ```python
+      def double(x):
+          return x * 2
+
+      result = double(5)   # 10
+      ```
+
+      **Anatomy of a function:**
+      - `def` — keyword that starts a function definition
+      - `double` — the function's name
+      - `x` — a parameter (placeholder for the input)
+      - `return` — sends a value back to the caller
+      - Call it by writing `double(5)` — `5` is the **argument**
+
+      **Multiple parameters:**
+      ```python
+      def clamp(value, min_val, max_val):
+          if value < min_val:
+              return min_val
+          if value > max_val:
+              return max_val
+          return value
+      ```
+
+      **Default parameter values:**
+      ```python
+      def normalize(score, max_score=100):
+          if max_score == 0:
+              return 0
+          return score / max_score
+      ```
+
+      Functions are the building blocks of data pipelines:
+      `load_data()` → `clean()` → `normalize()` → `train()` → `evaluate()`
+    example_code: |
+      def celsius_to_fahrenheit(c):
+          return (c * 9 / 5) + 32
+
+      def is_fever(temp_celsius, threshold=37.5):
+          return temp_celsius >= threshold
+
+      readings = [36.8, 38.2, 37.1, 39.0]
+      for t in readings:
+          f = celsius_to_fahrenheit(t)
+          fever = is_fever(t)
+          print(f"{t}°C = {round(f, 1)}°F — fever: {fever}")
+    hints:
+      - "Define with `def normalize_score(score, max_score):`. Inside, check if max_score is 0 first."
+      - "For normalize_score: `if max_score == 0: return 0` then `return score / max_score`."
+      - "For classify_score: use if/elif/else inside the function and `return` the label string."
+    exercise:
+      prompt: |
+        Write two functions:
+
+        **`normalize_score(score, max_score)`**
+        - Returns `score / max_score`
+        - If `max_score` is `0`, returns `0` to avoid a division error
+
+        **`classify_score(score)`**
+        - Returns `"excellent"` if score >= 0.90
+        - Returns `"good"` if score >= 0.75
+        - Returns `"fair"` if score >= 0.60
+        - Returns `"poor"` otherwise
+
+        Then call both functions and store results:
+        - `normalized = normalize_score(45, 50)`
+        - `label = classify_score(normalized)`
+
+        Print both.
+      starter_code: |
+        def normalize_score(score, max_score):
+            return None
+
+
+        def classify_score(score):
+            return None
+
+
+        normalized = normalize_score(45, 50)
+        label = classify_score(normalized)
+
+        print(normalized, label)
+      success_message: "Two reusable functions that work together — this is how real ML pipelines are structured."
+      tests:
+        - name: "normalize_score returns correct ratio"
+          assertion: "assert m.normalize_score(45, 50) == 0.9"
+          hint: "return score / max_score"
+        - name: "normalize_score handles zero max"
+          assertion: "assert m.normalize_score(10, 0) == 0"
+          hint: "Check if max_score == 0 before dividing and return 0."
+        - name: "classify_score returns correct labels"
+          assertion: "assert m.classify_score(0.95) == 'excellent' and m.classify_score(0.80) == 'good' and m.classify_score(0.50) == 'poor'"
+          hint: "Use if/elif/else with the thresholds 0.90, 0.75, 0.60."
+        - name: "normalized and label are correct"
+          assertion: "assert m.normalized == 0.9 and m.label == 'excellent'"
+          hint: "normalize_score(45, 50) = 0.9, classify_score(0.9) = 'excellent'"
+
+  # ─── Chapter 3: Data Inputs ──────────────────────────────────────────────────
+
+  - id: py-010-csv
+    chapter: "3. Data Inputs"
+    title: "Reading CSV Text"
+    summary: "Parse the most common data format — comma-separated values."
+    outcome: "You will parse a CSV string into a list of records and extract clean numeric columns."
+    body_markdown: |
+      Almost all data you will encounter starts life as a CSV (comma-separated values) file.
+      Before using pandas, it is worth understanding what CSV really is: just structured text.
+
+      Python's built-in `csv` module handles this safely:
+
+      ```python
+      import csv
+      from io import StringIO
+
+      csv_text = "name,score\nAda,90\nBen,81"
+      reader = csv.DictReader(StringIO(csv_text))
+      rows = list(reader)
+      # rows = [{"name": "Ada", "score": "90"}, {"name": "Ben", "score": "81"}]
+      ```
+
+      **Key points:**
+      - `StringIO` wraps a string so the csv module can read it like a file
+      - `DictReader` uses the first row as column names and gives each row as a dict
+      - **All values from CSV are strings** — you must convert numbers with `int()` or `float()`
+
+      ```python
+      score = int(rows[0]["score"])   # "90" → 90
+      ```
+
+      **Full pattern:**
+      ```python
+      names = []
+      scores = []
+      for row in rows:
+          names.append(row["name"])
+          scores.append(float(row["score"]))
+      ```
+    example_code: |
+      import csv
+      from io import StringIO
+
+      csv_text = "city,temp_c,humidity\nOslo,8.2,72\nBergen,11.5,85\nTrondheim,6.8,68"
+
+      rows = list(csv.DictReader(StringIO(csv_text)))
+      cities = [row["city"] for row in rows]
+      temps = [float(row["temp_c"]) for row in rows]
+
+      print(f"Cities: {cities}")
+      print(f"Avg temp: {round(sum(temps)/len(temps), 1)}°C")
+    hints:
+      - "Wrap the csv_text in StringIO before passing to DictReader: `csv.DictReader(StringIO(csv_text))`"
+      - "Loop over rows to build your lists. Convert scores with `float(row['score'])` — they come in as strings."
+      - "average_score = sum(scores) / len(scores). Round with round(..., 1)."
+    exercise:
+      prompt: |
+        Parse the following CSV data:
+
+        ```python
+        csv_text = "name,score,passed\nAda,92,True\nBen,67,False\nCara,88,True\nDan,74,True"
+        ```
+
+        Create:
+        - `rows` — list of dicts from DictReader
+        - `names` — list of name strings
+        - `scores` — list of scores as **floats**
+        - `average_score` — mean score rounded to 1 decimal
+        - `pass_count` — how many rows have `passed == "True"` (it comes in as a string)
+
+        Print all five.
+      starter_code: |
+        import csv
+        from io import StringIO
+
+        csv_text = "name,score,passed\nAda,92,True\nBen,67,False\nCara,88,True\nDan,74,True"
+
+        rows = []
+        names = []
+        scores = []
+        average_score = 0
+        pass_count = 0
+
+        print(rows, names, scores, average_score, pass_count)
+      success_message: "You parsed your first real-world data format. This skill is the entry point to all data work."
+      tests:
+        - name: "rows parsed correctly"
+          assertion: "assert len(m.rows) == 4 and m.rows[0]['name'] == 'Ada'"
+          hint: "rows = list(csv.DictReader(StringIO(csv_text)))"
+        - name: "names extracted correctly"
+          assertion: "assert m.names == ['Ada', 'Ben', 'Cara', 'Dan']"
+          hint: "Loop over rows and append row['name'] to names."
+        - name: "scores are floats"
+          assertion: "assert m.scores == [92.0, 67.0, 88.0, 74.0]"
+          hint: "Convert with float(row['score']). Order must match the original CSV."
+        - name: "average_score is correct"
+          assertion: "assert m.average_score == 80.2"
+          hint: "round(sum(scores) / len(scores), 1) = 80.2"
+        - name: "pass_count is correct"
+          assertion: "assert m.pass_count == 3"
+          hint: "Check `row['passed'] == 'True'` — it is a string, not a boolean, when read from CSV."
+
+  - id: py-011-string-cleaning
+    chapter: "3. Data Inputs"
+    title: "Cleaning Text Data"
+    summary: "Normalise messy strings before analysis — a critical preprocessing step."
+    outcome: "You will clean a list of raw labels into a consistent, analysis-ready format."
+    body_markdown: |
+      Real-world data almost always has inconsistent text:
+      extra spaces, mixed capitalisation, different spellings of the same category.
+      Before any analysis, you must standardise it.
+
+      **Common problems and fixes:**
+
+      | Problem | Example | Fix |
+      |---|---|---|
+      | Extra whitespace | `"  Yes "` | `.strip()` |
+      | Mixed case | `"YES"`, `"yes"` | `.lower()` |
+      | Abbreviations | `"n/a"`, `"na"`, `"N/A"` | `.replace()` or explicit check |
+      | Empty string | `""` | check `if value == ""` |
+
+      **A cleaning function pattern:**
+      ```python
+      def clean_label(raw):
+          if raw is None:
+              return None
+          cleaned = raw.strip().lower()
+          if cleaned in ("n/a", "na", "none", ""):
+              return None
+          return cleaned
+      ```
+
+      **Applying to a list:**
+      ```python
+      raw_labels = ["  Yes ", "no", "N/A", "YES", ""]
+      cleaned = [clean_label(label) for label in raw_labels]
+      ```
+
+      This one-line pattern is called a **list comprehension** — a compact way to apply a function to every item.
+    example_code: |
+      raw_categories = ["  A  ", "b", "C ", " a", "B", "  c"]
+
+      cleaned = [cat.strip().upper() for cat in raw_categories]
+      unique = list(set(cleaned))
+
+      print("Cleaned:", cleaned)
+      print("Unique categories:", sorted(unique))
+    hints:
+      - "Loop over raw_labels. For each, call .strip().lower() first. Then check if the result is in ('n/a', 'na', 'none', '')."
+      - "Build clean_labels as a list. For invalid/missing values, append None. For valid ones, append the cleaned string."
+      - "none_count = sum(1 for label in clean_labels if label is None). unique_labels = sorted(set(l for l in clean_labels if l is not None))"
+    exercise:
+      prompt: |
+        Clean the following raw labels from a survey response column:
+
+        ```python
+        raw_labels = ["  Yes ", "NO", "n/a", "yes", " No ", "N/A", "YES", "", "no"]
+        ```
+
+        Create:
+        - `clean_labels` — each label stripped and lowercased; `"n/a"`, `"na"`, and `""` become `None`
+        - `none_count` — how many values became `None`
+        - `unique_labels` — sorted list of distinct non-`None` labels
+
+        Print all three.
+      starter_code: |
+        raw_labels = ["  Yes ", "NO", "n/a", "yes", " No ", "N/A", "YES", "", "no"]
+
+        clean_labels = []
+        none_count = 0
+        unique_labels = []
+
+        # Write your cleaning logic here
+
+        print(clean_labels, none_count, unique_labels)
+      success_message: "You normalised a messy categorical column. Label cleaning is step one of every classification task."
+      tests:
+        - name: "clean_labels are correct"
+          assertion: "assert m.clean_labels == ['yes', 'no', None, 'yes', 'no', None, 'yes', None, 'no']"
+          hint: "Strip then lowercase. Map 'n/a' and '' to None. 'no' and 'NO' both become 'no'."
+        - name: "none_count is correct"
+          assertion: "assert m.none_count == 3"
+          hint: "Three values become None: 'n/a', 'N/A', and the empty string."
+        - name: "unique_labels is correct"
+          assertion: "assert m.unique_labels == ['no', 'yes']"
+          hint: "Collect non-None values, convert to a set for uniqueness, then sort."
+
+  # ─── Chapter 4: Reliability ──────────────────────────────────────────────────
+
+  - id: py-012-errors
+    chapter: "4. Reliability"
+    title: "Errors and Debugging"
+    summary: "Handle bad data without crashing — make failures visible, not silent."
+    outcome: "You will safely convert a column of raw values and collect exactly the ones that failed."
+    body_markdown: |
+      Data pipelines fail at the messiest moment — when a user types `"missing"` where you
+      expected a number, or `""` where a date should be.
+
+      Good pipelines catch these failures explicitly so you know what went wrong and why.
+
+      **`try / except`:**
+      ```python
+      try:
+          number = float("3.14")   # succeeds
+      except ValueError:
+          number = None            # only runs if float() raised ValueError
+      ```
+
+      **Be specific about which exception you catch:**
+      ```python
+      try:
+          result = float(raw_value)
+      except ValueError:
+          result = None    # bad string → not a number error
+      except TypeError:
+          result = None    # None or wrong type
+      ```
+
+      Catching `Exception` (all exceptions) hides bugs. Catch only what you expect.
+
+      **Reporting failures:**
+      ```python
+      failed = []
+      for raw in raw_values:
+          try:
+              numbers.append(float(raw))
+          except (ValueError, TypeError):
+              failed.append(raw)
+      ```
+
+      When you finish, `failed` tells you exactly what the data source sent you. That is
+      information you can act on — log it, report it to the data team, or filter it out.
+    example_code: |
+      raw_ages = ["25", "thirty", "42", None, "19", ""]
+
+      ages = []
+      errors = []
+
+      for raw in raw_ages:
+          try:
+              ages.append(int(raw))
+          except (ValueError, TypeError):
+              errors.append(raw)
+
+      print(f"Parsed: {ages}")
+      print(f"Failed ({len(errors)}): {errors}")
+    hints:
+      - "Inside the for loop, try `float(raw)`. If it raises ValueError or TypeError, catch it and add to failed_values."
+      - "Wrap the conversion: `try: numbers.append(float(raw)) except (ValueError, TypeError): failed_values.append(raw)`"
+      - "failure_rate = len(failed_values) / len(raw_values) — use round(..., 2) and multiply by 100 for a percentage."
+    exercise:
+      prompt: |
+        Convert raw measurement strings to floats, tracking failures.
+
+        ```python
+        raw_values = ["10.5", "missing", "8", "", "12.25", None, "7.0", "N/A"]
+        ```
+
+        Create:
+        - `numbers` — list of successfully converted floats
+        - `failed_values` — list of raw values that could not be converted
+        - `failure_rate` — `len(failed_values) / len(raw_values)`, rounded to 2 decimal places
+
+        Print all three.
+      starter_code: |
+        raw_values = ["10.5", "missing", "8", "", "12.25", None, "7.0", "N/A"]
+
+        numbers = []
+        failed_values = []
+        failure_rate = 0
+
+        # Write your loop here
+
+        print(numbers, failed_values, failure_rate)
+      success_message: "You built a robust conversion step. Tracking failures is what separates toy code from production code."
+      tests:
+        - name: "numbers are correct"
+          assertion: "assert m.numbers == [10.5, 8.0, 12.25, 7.0]"
+          hint: "Only 4 values convert successfully: '10.5', '8', '12.25', '7.0'."
+        - name: "failed_values are correct"
+          assertion: "assert m.failed_values == ['missing', '', None, 'N/A']"
+          hint: "The strings 'missing', '', 'N/A' and None all raise ValueError or TypeError."
+        - name: "failure_rate is correct"
+          assertion: "assert m.failure_rate == 0.5"
+          hint: "4 failed out of 8 total = 0.5. round(4/8, 2) = 0.5"
+
+  - id: py-013-defensive
+    chapter: "4. Reliability"
+    title: "Defensive Coding"
+    summary: "Validate inputs early so errors are obvious, not mysterious."
+    outcome: "You will write a safe average function that gives clear errors instead of confusing crashes."
+    body_markdown: |
+      A function that silently returns a wrong answer is more dangerous than one that crashes loudly.
+
+      **Guard clauses** check preconditions at the top of a function and return (or raise) early:
+      ```python
+      def safe_divide(a, b):
+          if b == 0:
+              return None       # or raise ValueError("b cannot be zero")
+          return a / b
+      ```
+
+      **Raising exceptions** — signal that something is genuinely wrong:
+      ```python
+      def compute_mean(values):
+          if not isinstance(values, list):
+              raise TypeError(f"Expected list, got {type(values).__name__}")
+          if len(values) == 0:
+              raise ValueError("Cannot compute mean of an empty list")
+          return sum(values) / len(values)
+      ```
+
+      **`isinstance`** checks whether a value has the expected type:
+      ```python
+      isinstance(42, int)        # True
+      isinstance("hello", str)   # True
+      isinstance(3.14, (int, float))  # True — checks against either type
+      ```
+
+      **The rule:** validate at boundaries (where data enters your system) and trust validated data inside.
+      Do not add guards everywhere — only where bad input is realistic.
+    example_code: |
+      def safe_max(values, default=None):
+          if not isinstance(values, list):
+              return default
+          numeric = [v for v in values if isinstance(v, (int, float))]
+          if not numeric:
+              return default
+          return max(numeric)
+
+      print(safe_max([3, 1, 4, 1, 5]))   # 5
+      print(safe_max([]))                  # None
+      print(safe_max(["bad", None, 7]))   # 7
+    hints:
+      - "First check: `if not isinstance(values, list): raise TypeError(...)`. Second check: empty list raises ValueError."
+      - "Filter non-numeric values: `numeric = [v for v in values if isinstance(v, (int, float))]`. Then compute sum/len."
+      - "`result['mean']` = sum/len, `result['count']` = count of valid numbers, `result['skipped']` = len(values) - count."
+    exercise:
+      prompt: |
+        Write a function `safe_stats(values)` that:
+
+        1. Raises `TypeError` with message `"values must be a list"` if `values` is not a list
+        2. Filters out any items that are not `int` or `float`
+        3. Raises `ValueError` with message `"no numeric values"` if nothing remains after filtering
+        4. Returns a dictionary with keys `"mean"`, `"count"`, and `"skipped"`:
+           - `"mean"` — the average of numeric values, rounded to 2 decimal places
+           - `"count"` — how many numeric values there were
+           - `"skipped"` — how many non-numeric values were filtered out
+
+        Store:
+        - `result = safe_stats([10, "bad", 20, None, 30])`
+
+        Print `result`.
+      starter_code: |
+        def safe_stats(values):
+            return {}
+
+
+        result = safe_stats([10, "bad", 20, None, 30])
+        print(result)
+      success_message: "You wrote a defensive, self-documenting function. This is production-quality Python."
+      tests:
+        - name: "safe_stats returns correct mean"
+          assertion: "assert m.safe_stats([10, 'bad', 20, None, 30])['mean'] == 20.0"
+          hint: "Mean of [10, 20, 30] = 20.0"
+        - name: "safe_stats returns correct count and skipped"
+          assertion: "assert m.safe_stats([10, 'bad', 20, None, 30])['count'] == 3 and m.safe_stats([10, 'bad', 20, None, 30])['skipped'] == 2"
+          hint: "3 numeric values, 2 non-numeric ('bad' and None)"
+        - name: "safe_stats raises TypeError for non-list"
+          assertion: |
+            try:
+                m.safe_stats("not a list")
+                assert False, "Should have raised TypeError"
+            except TypeError:
+                pass
+          hint: "Check isinstance(values, list) at the top and raise TypeError if it fails."
+        - name: "safe_stats raises ValueError for empty numeric list"
+          assertion: |
+            try:
+                m.safe_stats(["a", "b"])
+                assert False, "Should have raised ValueError"
+            except ValueError:
+                pass
+          hint: "After filtering, if numeric list is empty, raise ValueError."
+        - name: "result has correct values"
+          assertion: "assert m.result == {'mean': 20.0, 'count': 3, 'skipped': 2}"
+          hint: "result = safe_stats([10, 'bad', 20, None, 30]) should return {'mean': 20.0, 'count': 3, 'skipped': 2}"
