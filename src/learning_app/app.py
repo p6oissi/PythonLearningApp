@@ -65,11 +65,11 @@ def main() -> None:
 
 def _render_login_page() -> None:
     st.title("Python Foundations Lab")
-    st.markdown("Sign in with GitHub to track your progress across sessions.")
+    st.markdown("Sign in with Google to track your progress across sessions.")
     col1, col2, col3 = st.columns([2, 1, 2])
     with col2:
-        if st.button("Sign in with GitHub", use_container_width=True, type="primary"):
-            st.login("github")
+        if st.button("Sign in with Google", use_container_width=True, type="primary"):
+            st.login("google")
 
 
 def _maybe_seed_display_name(store, provider_name: str) -> None:
